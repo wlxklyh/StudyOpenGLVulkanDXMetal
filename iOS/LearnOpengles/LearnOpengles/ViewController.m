@@ -46,9 +46,9 @@ static const SceneVertex verticesForTriangle[] = {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
+    //1、上下文准备
    GLKView *view = (GLKView *)self.view;
- 
    view.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
    [EAGLContext setCurrentContext:view.context];
 
@@ -59,7 +59,7 @@ static const SceneVertex verticesForTriangle[] = {
     //清除颜色 用白色来清除一遍缓冲区
    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     
-   //生成一个缓冲ID三个步骤：生成id 绑定id 传入数据
+   //2、生成一个缓冲ID三个步骤：生成id 绑定id 传入数据
    glGenBuffers(1, &_vertexBufferID);
    glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferID);
    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesForTriangle), verticesForTriangle, GL_STATIC_DRAW);
@@ -71,13 +71,13 @@ static const SceneVertex verticesForTriangle[] = {
     [self.baseEffect prepareToDraw];
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //启动顶点缓存渲染操作
+    //3.1 启动顶点缓存渲染操作
     glEnableVertexAttribArray(GLKVertexAttribPosition);
 
-    //设置顶点缓冲的属性
+   //3.2 设置顶点缓冲的属性
     glVertexAttribPointer(GLKVertexAttribPosition, 3
                          , GL_FLOAT, GL_FALSE, sizeof(SceneVertex), NULL);
-    //绘制
+    //3.3 绘制
     glDrawArrays(GL_POINTS, 0, 3);
     glDrawArrays(GL_LINE_LOOP, 3, 3);
     glDrawArrays(GL_TRIANGLES, 6, 3);
@@ -86,6 +86,7 @@ static const SceneVertex verticesForTriangle[] = {
 }
 
 -(void)dealloc{
+    //4. 清理
     GLKView *view = (GLKView *)self.view;
     [EAGLContext setCurrentContext:view.context];
     
@@ -93,7 +94,6 @@ static const SceneVertex verticesForTriangle[] = {
         glDeleteBuffers(1, &_vertexBufferID);
         _vertexBufferID = 0;
     }
-    
     
     ((GLKView *)self.view).context = nil;
     [EAGLContext setCurrentContext:nil];
