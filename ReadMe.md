@@ -3,10 +3,10 @@
 <!-- TOC -->
 
 - [iOS OpenGL ES 2.0学习](#ios-opengl-es-20学习)
-    - [OS OpenGL ES 2.0 开发（一）：绘制一个三角形](#os-opengl-es-20-开发一绘制一个三角形)
-        - [1、xcode工程遇到的问题](#1xcode工程遇到的问题)
-        - [2、代码和效果如下：](#2代码和效果如下)
-    - [OS OpenGL ES 2.0 开发（二）：着色器（预告）](#os-opengl-es-20-开发二着色器预告)
+  - [OS OpenGL ES 2.0 开发（一）：绘制一个三角形](#os-opengl-es-20-开发一绘制一个三角形)
+    - [1、xcode工程遇到的问题](#1xcode工程遇到的问题)
+    - [2、代码和效果如下：](#2代码和效果如下)
+  - [OS OpenGL ES 2.0 开发（二）：着色器（预告）](#os-opengl-es-20-开发二着色器预告)
 
 <!-- /TOC -->
 ## OS OpenGL ES 2.0 开发（一）：绘制一个三角形
@@ -14,7 +14,7 @@
 1、Storyboard的View的class要设置成GLKview
 
 2、有Warning 要设置一个宏到build setting
-![](2020-09-28-02-14-57.png)
+![](Img/2020-09-28-02-14-57.png)
 
 ### 2、代码和效果如下：
 
@@ -74,7 +74,7 @@
     [EAGLContext setCurrentContext:nil];
 }
 ```
-![](2020-09-28-02-17-04.png)
+![](Img/2020-09-28-02-17-04.png)
 
 
 
