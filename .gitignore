@@ -24,3 +24,9 @@ DerivedData
 Pods
 !Podfile
 !Podfile.lock
+
+#clion
+cmake-build-debug
+.idea
+
+
