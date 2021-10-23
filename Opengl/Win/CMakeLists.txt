@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.0)
 cmake_policy(VERSION 3.0)
 
 #（1）设置工程的名字、设置include目录 和 lib目录、设置cmake module 拆分模块避免cmakelists.txt过大、设置输出目录
-project(RookieRenderer)
+project(LearnOpenGL)
 set(LOCAL_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/dependencies/includes)
 set(LOCAL_LIB_DIR ${CMAKE_SOURCE_DIR}/dependencies/lib)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
@@ -33,6 +33,11 @@ add_library(STB_IMAGE "src/ThirdParty/stb_image.cpp")
 set(LIBS ${LIBS} STB_IMAGE)
 add_library(GLAD "src/ThirdParty/glad.c")
 set(LIBS ${LIBS} GLAD)
+set(HCORE_DIR src/Core/)
+
+file(GLOB_RECURSE HCORE_CPP_FILES ${HCORE_DIR}/*.cpp)
+add_library(HCore ${HCORE_CPP_FILES})
+set(LIBS ${LIBS} HCore)
 
 # ????
 macro(makeLink src dest target)
@@ -227,4 +232,4 @@ foreach(CHAPTER ${CHAPTERS})
     endforeach(DEMO)
 endforeach(CHAPTER)
 
-include_directories(${CMAKE_SOURCE_DIR}/dependencies/includes)
+include_directories(${CMAKE_SOURCE_DIR}/dependencies/includes ${CMAKE_SOURCE_DIR}/src/Core)
