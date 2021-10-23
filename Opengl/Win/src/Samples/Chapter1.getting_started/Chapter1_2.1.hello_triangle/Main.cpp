@@ -51,12 +51,7 @@ int main()
         return -1;
     }
 
-    //==本节核心代码==
-    uint32 VBO;
-    glGenBuffers(1,&VBO);
-    glBindBuffer(GL_ARRAY_BUFFER,VBO);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
-
+//==本节核心代码 Begin==
     uint32 vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader,1,&vertexShaderStr,NULL);
@@ -96,8 +91,25 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragShader);
 
-    
-    //==本节核心代码==
+    uint32 VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    uint32 VBO;
+    glGenBuffers(1,&VBO);
+    glBindBuffer(GL_ARRAY_BUFFER,VBO);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+
+    //第一个参数：对应layout(location = 0)
+    //第二个参数：指定顶点属性的大小跟第三个参数GL_FLOAT 指明一个顶点是 3xfloat
+    //第三个参数：
+    //第四个参数：是否normalize
+    //第五个参数：步长 一个顶点对应多少数据 下一个顶点在多少数据后面
+    //第六个参数：偏移 offset
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3 * sizeof(float),(void*)0);
+    //启用顶点属性
+    glEnableVertexAttribArray(0);
+//==本节核心代码 End==
 
 
     while(!glfwWindowShouldClose(window))
@@ -109,6 +121,14 @@ int main()
         //...
         glClearColor(0.1f, 0.2f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+//==本节核心代码 Begin==
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES,0,3);
+
+//==本节核心代码 End==
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
