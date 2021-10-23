@@ -68,6 +68,9 @@ set(Chapter1.getting_started
         Chapter1_3.1.shaders_uniform
         Chapter1_3.2.shaders_interpolation
         Chapter1_3.3.shaders_class
+        Chapter1_3.4.shaders_exercise1
+        Chapter1_3.5.shaders_exercise2
+        Chapter1_3.6.shaders_exercise3
         Chapter1_4.1.textures
         Chapter1_4.2.textures_combined
         Chapter1_4.4.textures_exercise2
@@ -190,6 +193,7 @@ foreach(CHAPTER ${CHAPTERS})
                 "src/Samples/${CHAPTER}/${DEMO}/*.vs"
                 "src/Samples/${CHAPTER}/${DEMO}/*.fs"
                 "src/Samples/${CHAPTER}/${DEMO}/*.gs"
+                "src/Samples/${CHAPTER}/${DEMO}/*.glsl"
                 )
         set(NAME "${CHAPTER}__${DEMO}")
         add_executable(${NAME} ${SOURCE})
@@ -208,14 +212,16 @@ foreach(CHAPTER ${CHAPTERS})
 
         # 拷贝shader到build目录
         file(GLOB SHADERS
-                "src/${CHAPTER}/${DEMO}/*.vs"
-                "src/${CHAPTER}/${DEMO}/*.fs"
-                "src/${CHAPTER}/${DEMO}/*.gs"
+                "src/Samples/${CHAPTER}/${DEMO}/*.vs"
+                "src/Samples/${CHAPTER}/${DEMO}/*.fs"
+                "src/Samples/${CHAPTER}/${DEMO}/*.gs"
+                "src/Samples/${CHAPTER}/${DEMO}/*.glsl"
                 )
         foreach(SHADER ${SHADERS})
             if(WIN32)
                 # configure_file(${SHADER} "test")
-                add_custom_command(TARGET ${NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${NAME}>)
+                add_custom_command(TARGET ${NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SHADER} $<TARGET_FILE_DIR:${NAME}>)
+
             elseif(UNIX AND NOT APPLE)
                 file(COPY ${SHADER} DESTINATION ${CMAKE_SOURCE_DIR}/bin/${CHAPTER})
             elseif(APPLE)
