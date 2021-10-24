@@ -153,23 +153,28 @@
 
 ### 4.1.textures
 
-
+![](Img/143207961767300.png)
 
 ### 4.2.textures_combined
 
+![](Img/144150398471700.png)
+![](Img/146516589965100.png)
 
+### 4.3.textures_exercise1
+
+![](Img/146870393141500.png)
 
 ### 4.4.textures_exercise2
 
-
+![](Img/146995996232500.png)
 
 ### 4.5.textures_exercise3
 
-
+![](Img/147376013630600.png)
 
 ### 4.6.textures_exercise4
 
-
+![](Img/show1.4.6.gif)
 
 ### 5.1.transformations
 

@@ -39,14 +39,17 @@ file(GLOB_RECURSE HCORE_CPP_FILES ${HCORE_DIR}/*.cpp)
 add_library(HCore ${HCORE_CPP_FILES})
 set(LIBS ${LIBS} HCore)
 
+#（4）这个来把路径设置到工程里面
+configure_file(configuration/root_directory.h.in configuration/root_directory.h)
+include_directories(${CMAKE_BINARY_DIR}/configuration)
+
+
+#（5）组织工程 每一个节都是一个独立工程
 # ????
 macro(makeLink src dest target)
     add_custom_command(TARGET ${target} POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink ${src} ${dest}  DEPENDS  ${dest} COMMENT "mklink ${src} -> ${dest}")
 endmacro()
 
-
-
-#（4）组织工程 每一个节都是一个独立工程
 set(CHAPTERS
         Chapter1.getting_started
         Chapter2.lighting
@@ -73,6 +76,7 @@ set(Chapter1.getting_started
         Chapter1_3.6.shaders_exercise3
         Chapter1_4.1.textures
         Chapter1_4.2.textures_combined
+        Chapter1_4.3.textures_exercise1
         Chapter1_4.4.textures_exercise2
         Chapter1_4.5.textures_exercise3
         Chapter1_4.6.textures_exercise4
