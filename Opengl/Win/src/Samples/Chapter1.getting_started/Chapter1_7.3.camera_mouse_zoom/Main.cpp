@@ -2,5 +2,5 @@
 
 int main()
 {
-	std::cout << "Hello world";
+    std::cout << "see Chapter1_7.4.camera_class";
 }

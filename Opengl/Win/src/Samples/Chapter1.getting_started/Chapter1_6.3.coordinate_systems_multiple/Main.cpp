@@ -1,6 +1,207 @@
 #include <iostream>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <learnopengl/shader.h>
+#include <learnopengl/filesystem.h>
+#include "stb_image.h"
+#include "CoreHeader.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+float mixValue = 0.2f;
+float zRotate = 0.1f;
+// 三角形的顶点数据 是在NDC范围
+float g_vertices[] = {
+//     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+        0.5f,  0.5f, 0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+        0.5f, -0.5f, 0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.f, // bottom right
+        -0.5f, -0.5f, 0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+        -0.5f,  0.5f, 0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f,  // top left
+
+        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+        0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+        0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+        -0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+};
+uint32 g_indices[] =
+{
+        //前面
+        0, 1, 3,
+        1, 2, 3,
+        //后面
+        4, 5, 7,
+        5, 6, 7,
+        //上面
+        4, 3, 0,
+        3, 4, 7,
+        //下面
+        5, 1, 2,
+        2, 6, 5,
+        //左面
+        3, 2, 6,
+        6, 7, 3,
+        //右面
+        0, 4, 5,
+        5, 1, 0,
+};
+glm::vec3 g_cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+};
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow *window);
+uint32 GenerateVAO(int32 verticesSize, float *vertices,int32 indicesSize=0,uint32 *indices=NULL);
+uint32 GenerateTexture(const char *picPath, int texDiskFormat, int texFormat, int filter);
 
 int main()
 {
-	std::cout << "Hello world";
+    int SCR_WIDTH = 800;
+    int SCR_HEIGHT = 600;
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH,SCR_HEIGHT,"LearnOpenGL",NULL,NULL);
+    if(window == NULL)
+    {
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+    {
+        return -1;
+    }
+
+    uint32 VAO = GenerateVAO(sizeof(g_vertices), g_vertices,sizeof(g_indices),g_indices);
+
+    uint32 texture0 = GenerateTexture("resources/textures/container.jpg", GL_RGB, GL_RGB, GL_LINEAR);
+    uint32 texture1 = GenerateTexture("resources/textures/awesomeface.png", GL_RGBA, GL_RGBA, GL_LINEAR);
+
+    Shader shader("6.3.vs.glsl","6.3.fs.glsl");
+    shader.use();
+    shader.setInt("ourTexture0",0);
+    shader.setInt("ourTexture1",1);
+
+    glm::mat4 view          = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 projection    = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    view       = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+    shader.setMat4("projection", projection);
+    shader.setMat4("view", view);
+
+    glEnable(GL_DEPTH_TEST);
+    while(!glfwWindowShouldClose(window))
+    {
+        processInput(window);
+        glClearColor(0.1f, 0.2f, 0.4f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture0);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+
+        shader.use();
+        shader.setFloat("mixValue",mixValue);
+        glBindVertexArray(VAO);
+
+        for(int i = 0;i<10;i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, g_cubePositions[i]);
+            model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(20.0f, 20.0f, 1.0f));
+            model = glm::scale(model,glm::vec3(0.3));
+            shader.setMat4("model",model);
+
+            glDrawElements(GL_TRIANGLES,sizeof(g_indices) / sizeof(uint32),GL_UNSIGNED_INT,0);
+        }
+
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+    return 0;
+}
+
+uint32 GenerateTexture(const char *picPath, int texDiskFormat, int texFormat, int filter) {
+    uint32 texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+    int width,height,nrChanneLs;
+    uint8 *data = stbi_load(FileSystem::getPath(picPath).c_str(), &width, &height, &nrChanneLs, 0);
+    if(data)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, texFormat, width, height, 0, texDiskFormat, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    stbi_image_free(data);
+    return texture;
+}
+
+uint32 GenerateVAO(int32 verticesSize, float *vertices,int32 indicesSize,uint32 *indices) {
+    uint32 VAO;
+    uint32 VBO;
+    uint32 EBO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, GL_STATIC_DRAW);
+
+    glGenBuffers(1,&EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    return VAO;
+}
+
+void processInput(GLFWwindow *window)
+{
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        mixValue += 0.01f;
+        if(mixValue >= 1.0f)
+            mixValue = 1.0f;
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        mixValue -= 0.01f;
+        if (mixValue <= 0.0f)
+            mixValue = 0.0f;
+    }
+}
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
 }

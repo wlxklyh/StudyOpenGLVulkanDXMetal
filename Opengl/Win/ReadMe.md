@@ -178,37 +178,36 @@
 
 ### 5.1.transformations
 
-
-
-### 5.2.transformations_exercise2
-
-
+![](Img/show1.5.1.gif)
 
 ### 6.1.coordinate_systems
 
-
+//省略了
 
 ### 6.2.coordinate_systems_depth
 
-
+//省略了
 
 ### 6.3.coordinate_systems_multiple
 
-
+用了EBO绘制 左右面 上下面的 UV是相邻的 所以看起来是被拉伸了。
+![](Img/show1.6.3.gif)
 
 ### 7.1.camera_circle
 
-
+//see 7.4.camera_class
 
 ### 7.2.camera_keyboard_dt
 
-
+//see 7.4.camera_class
 
 ### 7.3.camera_mouse_zoom
 
-
+//see 7.4.camera_class
 
 ### 7.4.camera_class
+
+![](Img/show1.7.4.gif)
 
 ## Chapter2 lighting
 

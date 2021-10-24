@@ -2,5 +2,5 @@
 
 int main()
 {
-	std::cout << "Hello world";
+	std::cout << "//偷懒不做了";
 }
