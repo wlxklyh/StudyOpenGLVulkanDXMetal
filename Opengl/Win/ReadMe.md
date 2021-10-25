@@ -213,12 +213,15 @@
 
 ### 1.colors
 
+![](Img/213638602829400.png)
 
 ### 2.1.basic_lighting_diffuse
 
+![](Img/230843365859100.png)
 
 ### 2.2.basic_lighting_specular
 
+![](Img/230793363366600.png)
 
 ### 3.1.materials
 
