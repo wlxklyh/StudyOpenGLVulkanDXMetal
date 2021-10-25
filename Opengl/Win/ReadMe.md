@@ -144,7 +144,7 @@
 
 ### 3.5.shaders_exercise2
 
-![](Img/Show1.3.5.gif)
+![](Img/show1.3.5.gif)
 
 ### 3.6.shaders_exercise3
 
