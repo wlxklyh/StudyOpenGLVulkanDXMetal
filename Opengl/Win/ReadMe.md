@@ -225,11 +225,14 @@
 
 ### 3.1.materials
 
+![](Img/show2.3.1.gif)
 
 ### 3.2.materials_exercise1
 
 
 ### 4.1.lighting_maps_diffuse_map
+
+![](Img/250082963569600.png)
 
 
 ### 4.2.lighting_maps_specular_map

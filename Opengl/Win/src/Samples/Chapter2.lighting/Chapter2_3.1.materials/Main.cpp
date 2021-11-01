@@ -12,7 +12,7 @@ int SCR_WIDTH = 800;
 int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(-1.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -27,12 +27,12 @@ float g_vertices[] = {
         -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
         -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
         -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
@@ -123,10 +123,6 @@ int main() {
     Shader shader[2] = {Shader(lightvsPath.c_str(), lightfsPath.c_str()),
                         Shader(colorvsPath.c_str(), colorfsPath.c_str())};
 
-    shader[1].use();
-    shader[1].setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-    shader[1].setVec3("lightColor",  1.0f, 1.0f, 1.0f);
-    shader[1].setVec3("lightPos",  g_cubeTransform[0].x, g_cubeTransform[0].y, g_cubeTransform[0].z);
 
 
     glEnable(GL_DEPTH_TEST);
@@ -145,6 +141,24 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, texture1);
 
         glBindVertexArray(VAO);
+        shader[1].use();
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // decrease the influence
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // low influence
+        shader[1].setVec3("light.ambient", ambientColor);
+        shader[1].setVec3("light.diffuse", diffuseColor);
+        shader[1].setVec3("light.position",  g_cubeTransform[0].x, g_cubeTransform[0].y, g_cubeTransform[0].z);
+        shader[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        shader[1].setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        shader[1].setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        shader[1].setVec3("material.specular", 0.5f, 0.5f, 0.5f); // specular lighting doesn't have full effect on this object's material
+        shader[1].setFloat("material.shininess", 32.0f);
+
+
 
         for (int i = 0; i < g_cubeTransformNum; i++) {
             shader[i].use();
@@ -205,7 +219,7 @@ uint32 GenerateVAO(int32 verticesSize, float *vertices, int32 indicesSize, uint3
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     return VAO;
