@@ -9,10 +9,14 @@ struct Material {
 
 struct Light {
     vec3 position;
+    vec3 direction;
 
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float cutOff;
+    float outerCutOff;
 
     float constant;
     float linear;
@@ -29,10 +33,6 @@ uniform vec3 viewPos;
 
 void main()
 {
-    //attenuation
-    float distance = length(light.position - FragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
     vec4 diffuseColor = texture(material.diffuceTex,TexCoords);
     vec4 specColor = texture(material.specularTex, TexCoords);
     //ambient
@@ -51,6 +51,24 @@ void main()
     float spec = pow(max(r_dot_v,0.0),material.shininess);
     vec3 specular = specColor.xyz * light.specular * spec;
 
-    vec3 result =  (ambient + diffuse + specular)*attenuation;
+    //spot
+    float theta = dot(lightDir, normalize(-light.direction));
+    float epsilon   = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+
+    // attenuation
+    float distance    = length(light.position - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
+    vec3 result =  ambient;
+    result =  ambient * attenuation + (diffuse + specular) * intensity * attenuation;
+
+//    if(theta > light.cutOff){
+//        result =  ambient + (diffuse + specular)*intensity;
+//    } else
+//    {
+//        result = ambient;
+//    }
+
     FragColor = vec4(result,1.0f);
 }

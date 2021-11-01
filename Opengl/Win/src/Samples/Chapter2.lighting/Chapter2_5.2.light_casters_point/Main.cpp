@@ -143,9 +143,11 @@ int main() {
 
         shader[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
         shader[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        shader[1].setVec3("light.direction",  sin(lastFrame), 0, abs(cos(lastFrame)));
+        shader[1].setVec3("light.position",  5*sin(lastFrame), 0, 5*abs(cos(lastFrame)));
         shader[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
+        shader[1].setFloat("light.constant",  1.0f);
+        shader[1].setFloat("light.linear",    0.09f);
+        shader[1].setFloat("light.quadratic", 0.032f);
         shader[1].setInt("material.diffuceTex", 0);
         shader[1].setInt("material.specularTex", 1);
         shader[1].setVec3("material.specular", 0.5f, 0.5f, 0.5f); // specular lighting doesn't have full effect on this object's material

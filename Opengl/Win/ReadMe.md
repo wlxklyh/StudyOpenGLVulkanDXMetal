@@ -244,19 +244,23 @@
 
 ### 5.1.light_casters_directional
 
-![](Img/show2.4.2.gif)
+![](Img/show2.5.1.gif)
 
 ### 5.2.light_casters_point
 
+![](Img/show2.5.2.gif)
 
 ### 5.3.light_casters_spot
 
+![](Img/show2.5.3.gif)
 
 ### 5.4.light_casters_spot_soft
 
+![](Img/show2.5.4.gif)
 
 ### 6.multiple_lights
 
+![](Img/show2.6.gif)
 
 ## Chapter3.model_loading
 
