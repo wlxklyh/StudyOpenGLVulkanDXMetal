@@ -237,12 +237,14 @@
 
 ### 4.2.lighting_maps_specular_map
 
+![](Img/293985668245400.png)
 
 ### 4.4.lighting_maps_exercise4
 
 
 ### 5.1.light_casters_directional
 
+![](Img/show2.4.2.gif)
 
 ### 5.2.light_casters_point
 

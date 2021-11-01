@@ -32,6 +32,8 @@ typedef signed int	 		int32;
 // 64-bit signed integer
 typedef signed long long	int64;
 
+float frand(float start=0,float end=1);
+
 class HMath {
 
 };

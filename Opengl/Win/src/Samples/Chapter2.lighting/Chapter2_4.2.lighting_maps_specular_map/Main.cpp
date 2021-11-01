@@ -66,11 +66,12 @@ float g_vertices[] = {
 
 // pos scale rotate light color
 glm::vec3 g_cubeTransform[] = {
-        glm::vec3(-1.9f, 0.0f, -1.0f),
+        glm::vec3(0.8f, -0.5f, 0.5f),
         glm::vec3(0.05f, 0.05f, 0.05f),
         glm::vec3(20.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 0.2f),
-        glm::vec3(1.5f, 1.5f, 1.5f),
+
+        glm::vec3(0.0f, 0.0f, -1.0f),
+        glm::vec3(1.0f, 1.0f, 1.0f),
         glm::vec3(20.0f, 20.0f, 0.0f),
 };
 
@@ -115,6 +116,7 @@ int main() {
     uint32 VAO = GenerateVAO(sizeof(g_vertices), g_vertices);
 
     uint32 boxTexDiffuse = GenerateTexture(FileSystem::getPath("resources/textures/container2.png").c_str());
+    uint32 boxTexSpecular = GenerateTexture(FileSystem::getPath("resources/textures/container2_specular.png").c_str());
 
     std::string lightvsPath = SLN_SOURCE_CODE_DIR + std::string("light.vs.glsl");
     std::string lightfsPath = SLN_SOURCE_CODE_DIR + std::string("light.fs.glsl");
@@ -141,12 +143,16 @@ int main() {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, boxTexDiffuse);
 
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, boxTexSpecular);
+
         shader[1].setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
         shader[1].setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         shader[1].setVec3("light.position",  g_cubeTransform[0].x, g_cubeTransform[0].y, g_cubeTransform[0].z);
         shader[1].setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
         shader[1].setInt("material.diffuceTex", 0);
+        shader[1].setInt("material.specularTex", 1);
         shader[1].setVec3("material.specular", 0.5f, 0.5f, 0.5f); // specular lighting doesn't have full effect on this object's material
         shader[1].setFloat("material.shininess", 32.0f);
 
