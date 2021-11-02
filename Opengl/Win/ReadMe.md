@@ -260,12 +260,14 @@
 
 ### 6.multiple_lights
 
+蓝色是点光  红色是聚光灯 还有个方向灯是镜面反射比较明显的。
 ![](Img/show2.6.gif)
 
 ## Chapter3.model_loading
 
 ### 1.model_loading
 
+![](Img/show3.1.gif)
 
 ## Chapter4.advanced_opengl
 

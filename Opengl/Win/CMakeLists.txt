@@ -202,8 +202,14 @@ foreach(CHAPTER ${CHAPTERS})
         set(NAME "${CHAPTER}__${DEMO}")
         add_executable(${NAME} ${SOURCE})
 
+
+
         target_link_libraries(${NAME} ${LIBS})
         if(WIN32)
+            file(GLOB dll_src "${CMAKE_SOURCE_DIR}/dlls/*.dll" )
+            file(COPY ${dll_src} DESTINATION "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}")
+            file(COPY ${dll_src} DESTINATION "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}/Debug")
+
             set_target_properties(${NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}")
             set_target_properties(${NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CHAPTER}/Debug")
         elseif(UNIX AND NOT APPLE)
