@@ -273,6 +273,8 @@
 
 ### 1.1.depth_testing
 
+![](Img/show4.1.gif)
+
 ### 1.2.depth_testing_view
 
 ### 2.stencil_testing

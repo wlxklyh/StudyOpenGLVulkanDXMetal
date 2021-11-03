@@ -2,5 +2,5 @@
 
 int main()
 {
-	std::cout << "Hello world";
+	std::cout << "see Chapter4_1.1.depth_testing";
 }
