@@ -132,7 +132,7 @@ int main() {
 
 
     while (!glfwWindowShouldClose(window)) {
-        int MaxCase = 4;
+        int MaxCase = 5;
         switch (DepthTestCase%MaxCase) {
             case 0:
                 glEnable(GL_DEPTH_TEST);
@@ -147,6 +147,10 @@ int main() {
                 glDepthFunc(GL_LESS);
                 break;
             case 3:
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LESS);
+                break;
+            case 4:
                 glEnable(GL_DEPTH_TEST);
                 glDepthFunc(GL_LESS);
                 break;
@@ -166,23 +170,25 @@ int main() {
         shader.use();
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 50.0f);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
         shader.setInt("DepthCase",DepthTestCase%MaxCase);
-        shader.setFloat("far",100.0f);
+        shader.setFloat("far",50.0f);
         shader.setFloat("near",0.1f);
-        //两个cube
-        glBindVertexArray(VAOCube);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, cubeTex);
-        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-        shader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-        shader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        if(DepthTestCase%MaxCase !=4){
+            //两个cube
+            glBindVertexArray(VAOCube);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, cubeTex);
+            model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+            shader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+            shader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 
         // floor
         glBindVertexArray(VAOPlane);

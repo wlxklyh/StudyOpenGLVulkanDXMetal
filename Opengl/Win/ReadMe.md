@@ -273,6 +273,7 @@
 
 ### 1.1.depth_testing
 
+按着Q键切换
 ![](Img/show4.1.gif)
 
 ### 1.2.depth_testing_view

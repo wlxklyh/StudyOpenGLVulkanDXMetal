@@ -58,7 +58,19 @@ uniform vec3 viewPos;
 uniform DirLight dirLights[NR_POINT_LIGHTS];
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform SpotLight spotLights[NR_POINT_LIGHTS];
+struct PointLight {
+    bool use;
+    vec3 position;
 
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+//距离衰减
+    float constant;
+    float linear;
+    float quadratic;
+};
 vec3 CalcDirLight(DirLight light)
 {
     if(light.use == false){
