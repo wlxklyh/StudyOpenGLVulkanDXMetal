@@ -8,14 +8,14 @@
 #include <learnopengl/filesystem.h>
 #include <learnopengl/camera.h>
 
-int DepthTestCase = 0;
+int DepthTestCase = 5;
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.2f, 0.0f, 5.0f));
 float lastX = (float)SCR_WIDTH  / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
@@ -70,13 +70,13 @@ float cubeVertices[] = {
 };
 float planeVertices[] = {
         // positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
-        5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+        5.0f, -0.2f,  5.0f,  2.0f, 0.0f,
+        -5.0f, -0.2f,  5.0f,  0.0f, 0.0f,
+        -5.0f, -0.2f, -5.0f,  0.0f, 2.0f,
 
-        5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-        5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+        5.0f, -0.2f,  5.0f,  2.0f, 0.0f,
+        -5.0f, -0.2f, -5.0f,  0.0f, 2.0f,
+        5.0f, -0.2f, -5.0f,  2.0f, 2.0f
 };
 
 
@@ -98,7 +98,6 @@ uint32 GenerateVAO(int32 verticesSize, float *vertices, int32 indicesSize = 0, u
 uint32 GenerateTexture(const char *path);
 
 int main() {
-
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -132,7 +131,7 @@ int main() {
 
 
     while (!glfwWindowShouldClose(window)) {
-        int MaxCase = 5;
+        int MaxCase = 7;
         switch (DepthTestCase%MaxCase) {
             case 0:
                 glEnable(GL_DEPTH_TEST);
@@ -154,6 +153,14 @@ int main() {
                 glEnable(GL_DEPTH_TEST);
                 glDepthFunc(GL_LESS);
                 break;
+            case 5:
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LESS);
+                break;
+            case 6:
+                glEnable(GL_DEPTH_TEST);
+                glDepthFunc(GL_LESS);
+                break;
         }
 
 
@@ -170,13 +177,13 @@ int main() {
         shader.use();
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 50.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 12.0f);
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
         shader.setInt("DepthCase",DepthTestCase%MaxCase);
-        shader.setFloat("far",50.0f);
+        shader.setFloat("far",20.0f);
         shader.setFloat("near",0.1f);
-        if(DepthTestCase%MaxCase !=4){
+        if(DepthTestCase%MaxCase != 4 && DepthTestCase%MaxCase != 5 && DepthTestCase%MaxCase != 6){
             //两个cube
             glBindVertexArray(VAOCube);
             glActiveTexture(GL_TEXTURE0);
@@ -331,9 +338,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
-    // 接受键盘 B 键，随机修改背景颜色
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+    // 接受键盘 = 键
+    if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS)
     {
         DepthTestCase++;
+    }
+
+    // 接受键盘 - 键
+    if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS)
+    {
+        DepthTestCase--;
     }
 }

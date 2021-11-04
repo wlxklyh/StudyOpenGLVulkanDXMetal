@@ -3,11 +3,16 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 in float VS_Z;
+in vec4 FragPos;
 
 uniform sampler2D texture1;
 uniform int DepthCase;
 uniform float far;
 uniform float near;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 float LinearizeDepth(float depth)
 {
@@ -26,34 +31,29 @@ void main()
         FragColor = vec4(vec3(depth), 1.0);
     }
     else if(DepthCase == 4){
-        vec3 rgbColor = vec3(0.0);
-        if(VS_Z < 0)
-        {
-            rgbColor.r = 1.0;
-            rgbColor.g = 1.0;
-        }else if(VS_Z < 1)
-        {
-            rgbColor.r = 1.0;
-            rgbColor.b = 1.0;
-        }
-        else if(VS_Z < 10)
-        {
-            rgbColor.r = VS_Z/10;
-        }else if(VS_Z < 20)
-        {
-            rgbColor.g = (VS_Z-10)/10;
-        }else if(VS_Z < 30)
-        {
-            rgbColor.b = (VS_Z-20)/10;
-        }
-        else
-        {
-            rgbColor = vec3(1.0);
-        }
-        FragColor = vec4(rgbColor,1.0);
+        vec4 clipPosition = projection * view * FragPos;
+        vec4 ndcPosition = clipPosition/clipPosition.w;
+        FragColor = vec4(vec3(ndcPosition.z),1.0);
+    }
+    else if(DepthCase == 5){
+        vec4 viewPosition = view * FragPos;
+        FragColor = vec4(vec3(-viewPosition.z/far),1.0);
+    }
+    else if(DepthCase == 6)
+    {
+        FragColor = texture(texture1, TexCoords);
     }
     else
     {
         FragColor = texture(texture1, TexCoords);
     }
+    int worldZ = int(FragPos.z);
+    int worldX = int(FragPos.x);
+    if(FragPos.z - worldZ < 0.05&& FragPos.z - worldZ >-0.05){
+        FragColor = vec4(1.0,0.0,0.0,1.0);
+    }
+    if(FragPos.x - worldX < 0.05 && FragPos.x - worldX >-0.05){
+        FragColor = vec4(1.0,0.0,0.0,1.0);
+    }
+
 }
