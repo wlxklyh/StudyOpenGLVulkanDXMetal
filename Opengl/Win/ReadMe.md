@@ -280,6 +280,8 @@
 
 ### 2.stencil_testing
 
+![](Img/show4.2.gif)
+
 ### 3.1.blending_discard
 
 ### 3.2.blending_sort
