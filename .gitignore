@@ -28,6 +28,7 @@ Pods
 #clion
 cmake-build-debug
 .idea
+.vs
 bin
 Debug
 
