@@ -14,12 +14,7 @@
 #include <memory>
 #include <string>
 #include <fstream>
-struct D3D11PipelineBinHeader
-{
-    SIZE_T VSSize;
-    SIZE_T PSSize;
-    bool mSM3;
-};
+
 
 
 //--------------------------------------------------------------------------------------
@@ -301,7 +296,12 @@ HRESULT InitDevice()
 	hr = g_pd3dDevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &g_pPixelShader );
 
 
-
+    struct D3D11PipelineBinHeader
+    {
+        SIZE_T VSSize;
+        SIZE_T PSSize;
+        bool mSM3;
+    };
 
     //=================编译shader binary   begin
     size_t* size = new size_t;

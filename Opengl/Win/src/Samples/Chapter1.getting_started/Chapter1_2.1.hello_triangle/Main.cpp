@@ -16,7 +16,9 @@ const char* fragShaderStr = "#version 330 core\n"
                             "\n"
                             "void main()\n"
                             "{\n"
-                            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                            "    float x = 0.5;\n"
+                            "    float y = (x - 0.3) * 2.5;\n"
+                            "    FragColor = vec4(y, 0.0f, 0.0f, 1.0f);\n"
                             "} ";
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
