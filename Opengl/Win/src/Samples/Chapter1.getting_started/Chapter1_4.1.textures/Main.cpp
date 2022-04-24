@@ -8,10 +8,10 @@
 // 三角形的顶点数据 是在NDC范围
 float g_vertices[] = {
 //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-        0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left
+        0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f, // top right
+        0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f, // bottom left
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f  // top left
 };
 uint32 g_indices[] =
 {
@@ -66,7 +66,7 @@ int main()
 
     uint32 VAO = GenerateVAO(sizeof(g_vertices), g_vertices,sizeof(g_indices),g_indices);
 
-    uint32 texture = GenerateTexture("resources/textures/container.jpg", 0, 0, 0);
+    uint32 texture = GenerateTexture("resources/textures/RedWhite.jpg", 0, 0, 0);
 
     Shader shader("4.1.vs.glsl","4.1.fs.glsl");
     while(!glfwWindowShouldClose(window))
