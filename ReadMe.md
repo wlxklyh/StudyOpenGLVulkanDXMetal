@@ -308,6 +308,8 @@ GL_CLAMP_TO_EDGE
 
 #### 3.2.blending_sort
 
+![](Img/2022-05-13-00-13-31.png)
+
 #### 5.1.framebuffers
 
 #### 5.2.framebuffers_exercise1
