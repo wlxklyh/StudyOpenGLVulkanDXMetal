@@ -58,6 +58,7 @@ set(CHAPTERS
         Chapter5.advanced_lighting
         Chapter6.pbr
         Chapter7.in_practice
+        Other
         )
 
 set(Chapter1.getting_started
@@ -164,6 +165,9 @@ set(Chapter7.in_practice
         Chapter7_1.debugging
         Chapter7_2.text_rendering
         #Chapter7_3.2d_game
+        )
+set(Other
+        1.indirect_draw
         )
 
 

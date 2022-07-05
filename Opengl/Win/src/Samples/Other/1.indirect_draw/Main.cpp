@@ -105,9 +105,12 @@ int main()
 
 
 
-    std::string vsPath = SLN_SOURCE_CODE_DIR + std::string("instancing.vs.glsl");
-    std::string fsPath = SLN_SOURCE_CODE_DIR + std::string("instancing.fs.glsl");
-    Shader shader(vsPath.c_str(), fsPath.c_str());
+    std::string vsGreenPath = SLN_SOURCE_CODE_DIR + std::string("green.vs.glsl");
+    std::string fsGreenPath = SLN_SOURCE_CODE_DIR + std::string("green.fs.glsl");
+    std::string vsRedPath = SLN_SOURCE_CODE_DIR + std::string("red.vs.glsl");
+    std::string fsRedPath = SLN_SOURCE_CODE_DIR + std::string("red.fs.glsl");
+    Shader greenShader(vsGreenPath.c_str(), fsGreenPath.c_str());
+    Shader redShader(vsGreenPath.c_str(), fsGreenPath.c_str());
 
 
 
@@ -123,9 +126,36 @@ int main()
 
 //==本节核心代码 Begin==
         shader.use();
-        glBindVertexArray(quadVAO);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 100); // 100 triangles of 6 vertices each
-        glBindVertexArray(0);
+        //draw
+        //（1）这个是NultiDrawIndirect
+        // glEnable(GL_BLEND);
+        // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        // glUseProgram(gProgramRed);
+        //
+        // glMultiDrawElementsIndirect(GL_TRIANGLES, //type
+        //     GL_UNSIGNED_INT, //indices represented as unsigned ints
+        //     (GLvoid*)0, //start with the first draw command
+        //     100, //draw 100 objects
+        //     0); //no stride, the draw commands are tightly packed
+
+        //（2）这个是Indirect Draw
+        for(int j = 0; j < 100; j++)
+        {
+            if(j % 2 == 0)
+            {
+                glDisable(GL_BLEND);
+                greenShader.use();
+            } else
+            {
+                glEnable(GL_BLEND);
+                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                redShader.use();
+            }
+            glDrawElementsIndirect(GL_TRIANGLES,
+                                   GL_UNSIGNED_INT,
+                                   (GLvoid*)(0 + j*sizeof(SDrawElementsCommand))
+            );
+        }
 //==本节核心代码 End==
 
 
