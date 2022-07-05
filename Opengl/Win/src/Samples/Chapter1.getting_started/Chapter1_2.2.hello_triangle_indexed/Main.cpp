@@ -24,10 +24,10 @@ void processInput(GLFWwindow *window);
 
 // 三角形的顶点数据 是在NDC范围
 float vertices[] = {
-        0.5f, 0.5f, 0.0f,   // 右上角
-        0.5f, -0.5f, 0.0f,  // 右下角
-        -0.5f, -0.5f, 0.0f, // 左下角
-        -0.5f, 0.5f, 0.0f   // 左上角
+        0.5f, 0.5f, 0.0f,   // 右上角 0
+        0.5f, -0.5f, 0.0f,  // 右下角 1
+        -0.5f, -0.5f, 0.0f, // 左下角 2
+        -0.5f, 0.5f, 0.0f   // 左上角 3
 };
 
 unsigned int indices[] = { // 注意索引从0开始!
@@ -137,7 +137,7 @@ int main()
 //==本节核心代码 Begin==
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+        glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*3));
 //==本节核心代码 End==
 
 
