@@ -137,7 +137,7 @@ int main()
 //==本节核心代码 Begin==
         glUseProgram(shaderProgram);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*3));
+        glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT, (void*)(sizeof(unsigned int)*3));
 //==本节核心代码 End==
 
 
