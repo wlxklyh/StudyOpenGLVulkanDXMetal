@@ -52,6 +52,8 @@ int main()
     shader.use();
     shader.setInt("ourTexture0",0);
 
+    glEnable(GL_DEBUG_OUTPUT);
+
     while(!glfwWindowShouldClose(window))
     {
         processInput(window);
