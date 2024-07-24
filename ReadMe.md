@@ -95,6 +95,8 @@
       - [1.debugging](#1debugging)
       - [2.text\_rendering](#2text_rendering)
     - [自己的练习](#自己的练习)
+  - [Vulkan(Win)](#vulkanwin)
+    - [Ch1-1 创建GLFW窗口](#ch1-1-创建glfw窗口)
 
 <!-- /TOC -->
 
@@ -401,3 +403,26 @@ GL_CLAMP_TO_EDGE
 
 
 
+
+## Vulkan(Win)
+
+环境：
+TODO
+||已经在工程目录里|
+|-|-|
+|Vulkan SDK|Vulkan\VulkanDemo\Dependency\VulkanSDK\|
+|GLM|Vulkan\VulkanDemo\Dependency\glm-1.0.1\|
+|GLFW|Vulkan\VulkanDemo\Dependency\glfw-3.4.bin.WIN64\|
+|stb_image.h|Vulkan\VulkanDemo\Dependency\stb_image.h|
+
+工程地址：
+https://github.com/wlxklyh/StudyOpenGLVulkanDXMetal/tree/master/Vulkan
+
+教程：
+https://easyvulkan.github.io
+
+### Ch1-1 创建GLFW窗口
+
+GlfwGeneral.hpp 是写了一些窗口的工具函数 这页main函数调用就比较简洁。
+
+![](Img/2024-07-25-01-18-51.png)

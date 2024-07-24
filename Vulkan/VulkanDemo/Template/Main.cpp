@@ -1,8 +1,11 @@
 #include "GlfwGeneral.hpp"
 
 int main() {
+	//初始化窗口
 	if (!InitializeWindow({1280,720}))
-		return -1;//来个你讨厌的返回值
+		return -1;
+
+	//Loop
 	while (!glfwWindowShouldClose(pWindow)) {
 
 		/*渲染过程，待填充*/

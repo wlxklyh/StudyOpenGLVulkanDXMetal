@@ -66,18 +66,24 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
 
 	return true;
 }
+
 void TerminateWindow() {
 	vulkan::graphicsBase::Base().WaitIdle();
 	glfwTerminate();
 }
+
+//从窗口变为全屏
 void MakeWindowFullScreen() {
 	const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
 	glfwSetWindowMonitor(pWindow, pMonitor, 0, 0, pMode->width, pMode->height, pMode->refreshRate);
 }
+
+//从全屏变为窗口
 void MakeWindowWindowed(VkOffset2D position, VkExtent2D size) {
 	const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
 	glfwSetWindowMonitor(pWindow, nullptr, position.x, position.y, size.width, size.height, pMode->refreshRate);
 }
+
 void TitleFps() {
 	static double time0 = glfwGetTime();
 	static double time1;
