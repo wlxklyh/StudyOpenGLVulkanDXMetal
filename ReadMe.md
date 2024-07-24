@@ -406,6 +406,11 @@ GL_CLAMP_TO_EDGE
 
 ## Vulkan(Win)
 
+下载这个文件里的链接 然后解压到当前目录  就会有Lib目录出来
+Vulkan\VulkanDemo\Dependency\VulkanSDK\1.3.290.0\Lib.Download
+![](Img/2024-07-25-02-13-45.png)
+
+
 环境：
 TODO
 ||已经在工程目录里|
@@ -424,5 +429,5 @@ https://easyvulkan.github.io
 ### Ch1-1 创建GLFW窗口
 
 GlfwGeneral.hpp 是写了一些窗口的工具函数 这页main函数调用就比较简洁。
-
+![](Img/2024-07-25-01-29-27.png)
 ![](Img/2024-07-25-01-18-51.png)
