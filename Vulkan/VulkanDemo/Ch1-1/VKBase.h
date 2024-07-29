@@ -1,4 +1,4 @@
-﻿#include "Util/EasyVKStart.h"
+﻿#include "EasyVKStart.h"
 
 namespace vulkan {
 	constexpr VkExtent2D defaultWindowSize = { 1280, 720 };

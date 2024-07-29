@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9e5c00c5-c71a-477b-8f10-5111e024c816}</ProjectGuid>
+    <ProjectGuid>{2AD1FDD8-FF07-4046-B37C-0E004ED65308}</ProjectGuid>
     <RootNamespace>VulkanDemo</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Ch1-1</ProjectName>
@@ -143,8 +143,8 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EasyVKStart.h" />
     <ClInclude Include="GlfwGeneral.hpp" />
-    <ClInclude Include="Util\EasyVKStart.h" />
     <ClInclude Include="VKBase.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

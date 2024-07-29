@@ -21,10 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9e5c00c5-c71a-477b-8f10-5111e024c816}</ProjectGuid>
+    <ProjectGuid>{9143A78D-FF31-4E6F-8322-2EE58526B8A3}</ProjectGuid>
     <RootNamespace>VulkanDemo</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Template</ProjectName>
+    <ProjectName>Ch2-0</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

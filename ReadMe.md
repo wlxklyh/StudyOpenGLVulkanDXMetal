@@ -96,7 +96,11 @@
       - [2.text\_rendering](#2text_rendering)
     - [自己的练习](#自己的练习)
   - [Vulkan(Win)](#vulkanwin)
-    - [Ch1-1 创建GLFW窗口](#ch1-1-创建glfw窗口)
+    - [Ch1 初始化](#ch1-初始化)
+      - [Ch1-1 创建GLFW窗口](#ch1-1-创建glfw窗口)
+      - [Ch1-2 初始化流程](#ch1-2-初始化流程)
+      - [Ch1-3](#ch1-3)
+      - [Ch1-4](#ch1-4)
 
 <!-- /TOC -->
 
@@ -426,8 +430,26 @@ https://github.com/wlxklyh/StudyOpenGLVulkanDXMetal/tree/master/Vulkan
 教程：
 https://easyvulkan.github.io
 
-### Ch1-1 创建GLFW窗口
+### Ch1 初始化
+
+#### Ch1-1 创建GLFW窗口
+
+|文件|描述|
+|-|-|
+|Util/EasyVKStart.h|Vulkan的环境 include这些|
+|GlfwGeneral.hpp|glfw创建窗口的工具|
+|VKBase.h|Vulkan相关的基本内容|
 
 GlfwGeneral.hpp 是写了一些窗口的工具函数 这页main函数调用就比较简洁。
 ![](Img/2024-07-25-01-29-27.png)
 ![](Img/2024-07-25-01-18-51.png)
+
+#### Ch1-2 初始化流程
+
+略
+
+#### Ch1-3
+
+略
+
+#### Ch1-4

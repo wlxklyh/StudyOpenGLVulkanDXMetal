@@ -14,11 +14,12 @@ def rename_file(old_name, new_name):
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Copy and rename a project')
+    parser.add_argument('old_proj_name', type=str, help='Old Project Name')
     parser.add_argument('new_proj_name', type=str, help='New Project Name')
     args = parser.parse_args()
     
     # 模板项目路径
-    OriginalProjectName = "Template"
+    OriginalProjectName = args.old_proj_name
     source_project_path = os.path.join(cur_folder_path, OriginalProjectName)
 
     # 新项目路径
