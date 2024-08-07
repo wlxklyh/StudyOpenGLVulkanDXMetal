@@ -310,6 +310,14 @@ namespace vulkan {
 			return VK_SUCCESS;
 		}
 		VkResult CreateInstance(VkInstanceCreateFlags flags = 0) {
+			uint32_t layerCount;
+			vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+			std::vector<VkLayerProperties> layerProperties(layerCount);
+			vkEnumerateInstanceLayerProperties(&layerCount, layerProperties.data());
+			for(uint32_t i = 0; i < layerProperties.size(); i++)
+			{
+				std::cout << layerProperties[i].layerName << std::endl;
+			}
 #ifndef NDEBUG
 			AddInstanceLayer("VK_LAYER_KHRONOS_validation");
 			AddInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
