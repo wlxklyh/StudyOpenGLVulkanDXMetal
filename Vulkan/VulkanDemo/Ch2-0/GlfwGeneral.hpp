@@ -24,6 +24,18 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
 
     glfwWindowHint(GLFW_RESIZABLE, isResizable);
 
+    uint32_t extensionCount = 0;
+    const char** extensionNames;
+    extensionNames = glfwGetRequiredInstanceExtensions(&extensionCount);
+    if(!extensionNames)
+    {
+        std::cout << std::format(("[Initializewindow]\nVulkan is not available on this machine!\n"));
+        glfwTerminate();
+        return false;
+    }
+    //VK_KHR_surface VK_KHR_win32_surface
+    for (size_t i = 0; i < extensionCount;i ++)
+        vulkan::graphicBase::Base().AddInstanceExtension(extensionNames[i]);
 
     pMonitor = glfwGetPrimaryMonitor();
 
@@ -68,4 +80,17 @@ void TileFps()
         time0 = time1;
         dframe = 0;
     }
+}
+
+void MakeWindowFullScreen()
+{
+    const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
+    glfwSetWindowMonitor(pWindow, pMonitor, 0, 0, pMode->width, pMode->height, GLFW_DONT_CARE);
+}
+
+void MakeWindowWindowed(VkOffset2D position, VkExtent2D size)
+{
+    const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
+    glfwSetWindowMonitor(pWindow, nullptr, position.x, position.y, size.width, size.height, pMode->refreshRate);
+    
 }
