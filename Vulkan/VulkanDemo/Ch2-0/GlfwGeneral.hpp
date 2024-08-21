@@ -35,8 +35,10 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
     }
     //VK_KHR_surface VK_KHR_win32_surface
     for (size_t i = 0; i < extensionCount;i ++)
-        vulkan::graphicBase::Base().AddInstanceExtension(extensionNames[i]);
+        vulkan::graphicsBase::Base().AddInstanceExtension(extensionNames[i]);
 
+    vulkan::graphicsBase::Base().AddDeviceExtension(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+    
     pMonitor = glfwGetPrimaryMonitor();
 
     const GLFWvidmode* pMode = glfwGetVideoMode(pMonitor);
@@ -51,6 +53,7 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
         return false;
     }
 
+    vulkan::graphicsBase::Base().CreateInstance();
     return true;
 }
 

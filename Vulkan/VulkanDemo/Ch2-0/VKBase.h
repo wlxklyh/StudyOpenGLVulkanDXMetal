@@ -4,13 +4,14 @@
 
 namespace vulkan
 {
-    class graphicBase
+    class graphicsBase
     {
+        uint32_t apiVersion = VK_API_VERSION_1_0;
         //(0)单例
-        static graphicBase singleton;
-        graphicBase() = default;
-        graphicBase(graphicBase&&) = delete;
-        ~graphicBase()
+        static graphicsBase singleton;
+        graphicsBase() = default;
+        graphicsBase(graphicsBase&&) = delete;
+        ~graphicsBase()
         {}
 
         //(1)实例
@@ -75,8 +76,14 @@ namespace vulkan
 
         
     public:
+        VkResult UseLatestApiVersion() {
+            if (vkGetInstanceProcAddr(VK_NULL_HANDLE, "vkEnumerateInstanceVersion"))
+                return vkEnumerateInstanceVersion(&apiVersion);
+            return VK_SUCCESS;
+        }
+        
         //(0)单例
-        static graphicBase& Base()
+        static graphicsBase& Base()
         {
             return singleton;
         }
@@ -88,7 +95,40 @@ namespace vulkan
         //(1)实例
         VkResult CreateInstance(VkInstanceCreateFlags flags = 0)
         {
-            
+#ifndef NDEBUG
+            AddInstanceLayer("VK_LAYER_KHRONOS_validation");
+            AddInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif
+            VkApplicationInfo applicationInfo = {
+            .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
+            .apiVersion = apiVersion
+            };
+            VkInstanceCreateInfo instanceCreateInfo = {
+                .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+                .flags = flags,
+                .pApplicationInfo = &applicationInfo,
+                .enabledLayerCount = uint32_t(instanceLayers.size()),
+                .ppEnabledLayerNames = instanceLayers.data(),
+                .enabledExtensionCount = uint32_t(instanceExtensions.size()),
+                .ppEnabledExtensionNames = instanceExtensions.data(),
+            };
+
+            if(VkResult result = vkCreateInstance(&instanceCreateInfo, nullptr, &instance))
+            {
+                std::cout << std::format("[graphicsBase]Error\nFailed to create an instance!\n");
+                return result;
+            }
+            std::cout << std::format(
+                "Vulkan API Version:{}.{}.{}\n",
+                VK_VERSION_MAJOR(apiVersion),
+                VK_VERSION_MINOR(apiVersion),
+                VK_VERSION_PATCH(apiVersion)
+                );
+
+#ifndef NDEBUG
+            CreateDebugMessenger();
+#endif
+            return VK_SUCCESS;
         }
         
         //(2)layer extension
@@ -267,5 +307,5 @@ namespace vulkan
         }
     };
 
-    inline graphicBase graphicBase::singleton;
+    inline graphicsBase graphicsBase::singleton;
 }
