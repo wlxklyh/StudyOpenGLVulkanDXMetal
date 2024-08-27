@@ -21,7 +21,6 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
     }
 
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
     glfwWindowHint(GLFW_RESIZABLE, isResizable);
 
     uint32_t extensionCount = 0;
@@ -52,8 +51,20 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
         std::cout << std::format("[Initializewindow]\n Failed to create GLFW window. \n");
         return false;
     }
-
+    vulkan::graphicsBase::Base().UseLatestApiVersion();
+    
     vulkan::graphicsBase::Base().CreateInstance();
+
+    VkSurfaceKHR surface = VK_NULL_HANDLE;
+    if (VkResult result = glfwCreateWindowSurface(vulkan::graphicsBase::Base().Instance(), pWindow, nullptr, &surface)) {
+        std::cout << std::format("[ InitializeWindow ] ERROR\nFailed to create a window surface!\nError code: {}\n", int32_t(result));
+        glfwTerminate();
+        return false;
+    }
+    // graphicsBase::Base().Surface(surface);
+
+    if (vulkan::graphicsBase::Base().GetPhysicalDevices() )
+        return false;
     return true;
 }
 

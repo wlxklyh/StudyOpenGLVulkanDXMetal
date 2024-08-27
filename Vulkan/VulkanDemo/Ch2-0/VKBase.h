@@ -28,8 +28,8 @@ namespace vulkan
                 {
                     return;
                 }
-                container.push_back(name);
             }
+            container.push_back(name);
         }
         
         //(3)调试
@@ -124,6 +124,14 @@ namespace vulkan
         //(1)实例
         VkResult CreateInstance(VkInstanceCreateFlags flags = 0)
         {
+            uint32_t layerCount;
+            vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+            std::vector<VkLayerProperties> layerProperties(layerCount);
+            vkEnumerateInstanceLayerProperties(&layerCount, layerProperties.data());
+            for(uint32_t i = 0; i < layerProperties.size(); i++)
+            {
+                std::cout << layerProperties[i].layerName << std::endl;
+            }
 #ifndef NDEBUG
             AddInstanceLayer("VK_LAYER_KHRONOS_validation");
             AddInstanceExtension(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
@@ -324,7 +332,27 @@ namespace vulkan
         }
         VkResult GetPhysicalDevices()
         {
+            uint32_t deviceCount;
+            if(VkResult result = vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr))
+            {
+                std::cout << std::format("[ graphicsBase ] ERROR\nFailed to get the count of physical devices!\nError code: {}\n", int32_t(result));
+                return result;
+            }
+            if(!deviceCount)
+            {
+                std::cout << std::format("[ graphicsBase ] ERROR\nFailed to find any physical device supports vulkan!\n"),
+                abort();
+            }
+            availablePhysicalDevices.resize(deviceCount);
+            VkResult result = vkEnumeratePhysicalDevices(instance, &deviceCount, availablePhysicalDevices.data());
+            if (result)
+                std::cout << std::format("[ graphicsBase ] ERROR\nFailed to enumerate physical devices!\nError code: {}\n", int32_t(result));
             
+            for(VkPhysicalDevice& device : availablePhysicalDevices)
+            {
+                std::cout << device;
+            }
+            return result;
         }
         VkResult DeterminePhysicalDevice(uint32_t deviceIndex = 0, bool enableGraphicsQueue=true, bool enableComputeQueue=true)
         {
