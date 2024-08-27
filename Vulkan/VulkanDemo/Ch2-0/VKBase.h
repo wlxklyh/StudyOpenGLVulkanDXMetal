@@ -36,7 +36,36 @@ namespace vulkan
         VkDebugUtilsMessengerEXT debugMessenger;
         VkResult CreateDebugMessenger()
         {
+            static PFN_vkDebugUtilsMessengerCallbackEXT DebugUtilsMessengerCallback = [](
+            VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+            VkDebugUtilsMessageTypeFlagsEXT messageTypes,
+            const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+            void* pUserData)->VkBool32 {
+                    std::cout << std::format("{}\n\n", pCallbackData->pMessage);
+                    return VK_FALSE;
+                };
             
+            VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCreateInfo = {
+                .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+                .messageSeverity =
+                    VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
+                        VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+                .messageType =
+                    VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT|
+                    VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
+                    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+                .pfnUserCallback = DebugUtilsMessengerCallback
+            };
+            PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessenger =
+        reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
+            if (vkCreateDebugUtilsMessenger) {
+                VkResult result = vkCreateDebugUtilsMessenger(instance, &debugUtilsMessengerCreateInfo, nullptr, &debugMessenger);
+                if (result)
+                    std::cout << std::format("[ graphicsBase ] ERROR\nFailed to create a debug messenger!\nError code: {}\n", int32_t(result));
+                return result;
+            }
+            std::cout << std::format("[ graphicsBase ] ERROR\nFailed to get the function pointer of vkCreateDebugUtilsMessengerEXT!\n");
+            return VK_RESULT_MAX_ENUM;
         }
 
         //(4)surface
@@ -150,7 +179,35 @@ namespace vulkan
         }
         VkResult CheckInstanceLayers(std::span<const char*> layersToCheck)
         {
-            
+            uint32_t layerCount;
+            std::vector<VkLayerProperties> availableLayers;
+            if (VkResult result = vkEnumerateInstanceLayerProperties(&layerCount, nullptr)) {
+                std::cout << std::format("[ graphicsBase ] ERROR\nFailed to get the count of instance layers!\n");
+                return result;
+            }
+
+            if (layerCount) {
+                availableLayers.resize(layerCount);
+                if (VkResult result = vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data())) {
+                    std::cout << std::format("[ graphicsBase ] ERROR\nFailed to enumerate instance layer properties!\nError code: {}\n", int32_t(result));
+                    return result;
+                }
+                for (auto& i : layersToCheck) {
+                    bool found = false;
+                    for (auto& j : availableLayers)
+                        if (!strcmp(i, j.layerName)) {
+                            found = true;
+                            break;
+                        }
+                    if (!found)
+                        i = nullptr;
+                }
+            }
+            else
+                for (auto& i : layersToCheck)
+                    i = nullptr;
+            //一切顺利则返回VK_SUCCESS
+            return VK_SUCCESS;
         }
         void InstanceLayers(const std::vector<const char*>& layerNames)
         {
@@ -158,6 +215,35 @@ namespace vulkan
         }
         VkResult CheckInstanceExtensions(std::span<const char*> extensionsToCheck, const char* layerName = nullptr) const 
         {
+            uint32_t extensionCount;
+            std::vector<VkExtensionProperties> availableExtensions;
+            if (VkResult result = vkEnumerateInstanceExtensionProperties(layerName, &extensionCount, nullptr)) {
+                layerName ?
+                std::cout << std::format("[ graphicsBase ] ERROR\nFailed to get the count of instance extensions!\nLayer name:{}\n", layerName) :
+                std::cout << std::format("[ graphicsBase ] ERROR\nFailed to get the count of instance extensions!\n");
+                return result;
+            }
+            if (extensionCount) {
+                availableExtensions.resize(extensionCount);
+                if (VkResult result = vkEnumerateInstanceExtensionProperties(layerName, &extensionCount, availableExtensions.data())) {
+                    std::cout << std::format("[ graphicsBase ] ERROR\nFailed to enumerate instance extension properties!\nError code: {}\n", int32_t(result));
+                    return result;
+                }
+                for (auto& i : extensionsToCheck) {
+                    bool found = false;
+                    for (auto& j : availableExtensions)
+                        if (!strcmp(i, j.extensionName)) {
+                            found = true;
+                            break;
+                        }
+                    if (!found)
+                        i = nullptr;
+                }
+            }
+            else
+                for (auto& i : extensionsToCheck)
+                    i = nullptr;
+            return VK_SUCCESS;
             
         }
         void InstanceExtensions(const std::vector<const char*>& extensionNames)
