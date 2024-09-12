@@ -63,7 +63,9 @@ bool InitializeWindow(VkExtent2D size, bool fullScreen = false, bool isResizable
     }
     // graphicsBase::Base().Surface(surface);
 
-    if (vulkan::graphicsBase::Base().GetPhysicalDevices() )
+    if (vulkan::graphicsBase::Base().GetPhysicalDevices() ||
+        vulkan::graphicsBase::Base().DeterminePhysicalDevice(0, true, false) ||
+        vulkan::graphicsBase::Base().CreateDevice())
         return false;
     return true;
 }

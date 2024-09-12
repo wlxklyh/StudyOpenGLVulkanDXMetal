@@ -489,6 +489,57 @@ namespace vulkan
         VkResult DeterminePhysicalDevice(uint32_t deviceIndex = 0, bool enableGraphicsQueue = true,
                                          bool enableComputeQueue = true)
         {
+            //定义一个特殊值用于标记一个队列族索引已被找过 但是没有找到
+            static constexpr uint32_t notFound = INT32_MAX;
+
+            struct queueFamilyIndexCombination
+            {
+                uint32_t graphics = VK_QUEUE_FAMILY_IGNORED;
+                uint32_t presentation = VK_QUEUE_FAMILY_IGNORED;
+                uint32_t compute = VK_QUEUE_FAMILY_IGNORED;
+            };
+
+            static std::vector<queueFamilyIndexCombination> queueFamilyIndexCombinations(availablePhysicalDevices.size());
+            auto& [ig,ip,ic] = queueFamilyIndexCombinations[deviceIndex];
+
+            if(ig == notFound && enableGraphicsQueue||
+                ip == notFound && surface ||
+                ic == notFound && enableComputeQueue)
+                return VK_RESULT_MAX_ENUM;
+
+            if (ig == VK_QUEUE_FAMILY_IGNORED && enableGraphicsQueue ||
+                ip == VK_QUEUE_FAMILY_IGNORED && surface ||
+                ic == VK_QUEUE_FAMILY_IGNORED && enableComputeQueue)
+            {
+                uint32_t indices[3];
+                VkResult result = GetQueueFamilyIndices(availablePhysicalDevices[deviceIndex], enableGraphicsQueue,
+                                                        enableComputeQueue, indices);
+                //若GetQueueFamilyIndices(...)返回VK_SUCCESS或VK_RESULT_MAX_ENUM（vkGetPhysicalDeviceSurfaceSupportKHR(...)执行成功但没找齐所需队列族），
+                //说明对所需队列族索引已有结论，保存结果到queueFamilyIndexCombinations[deviceIndex]中相应变量
+                //应被获取的索引若仍为VK_QUEUE_FAMILY_IGNORED，说明未找到相应队列族，VK_QUEUE_FAMILY_IGNORED（~0u）与INT32_MAX做位与得到的数值等于notFound
+                if (result == VK_SUCCESS ||
+                    result == VK_RESULT_MAX_ENUM)
+                {
+                    if (enableGraphicsQueue)
+                        ig = indices[0] & INT32_MAX;
+                    if (surface)
+                        ip = indices[1] & INT32_MAX;
+                    if (enableComputeQueue)
+                        ic = indices[2] & INT32_MAX;
+                }
+                //如果GetQueueFamilyIndices(...)执行失败，return
+                if (result)
+                    return result;
+            }
+            //若以上两个if分支皆不执行，则说明所需的队列族索引皆已被获取，从queueFamilyIndexCombinations[deviceIndex]中取得索引
+            else
+            {
+                queueFamilyIndex_graphics = enableGraphicsQueue ? ig : VK_QUEUE_FAMILY_IGNORED;
+                queueFamilyIndex_presentation = surface ? ip : VK_QUEUE_FAMILY_IGNORED;
+                queueFamilyIndex_compute = enableComputeQueue ? ic : VK_QUEUE_FAMILY_IGNORED;
+            }
+            physicalDevice = availablePhysicalDevices[deviceIndex];
+            return VK_SUCCESS;
         }
 
         VkResult CreateDevice(VkDeviceCreateFlags flags = 0)
